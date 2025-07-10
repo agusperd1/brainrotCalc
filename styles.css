@@ -1,0 +1,178 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background: #2c2c2c;
+  color: #f0f0f0;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1, h2 {
+  text-align: center;
+  color: #ffde59;
+}
+
+.brainrot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.brainrot-card {
+  background: #444;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.brainrot-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.brainrot-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px #ffde59;
+}
+
+.brainrot-card.selected {
+  border: 3px solid #ffde59;
+}
+
+.mutations button {
+  margin: 5px;
+  padding: 10px 15px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.mutations button.gold {
+  background: gold;
+  color: #000;
+}
+
+.mutations button.diamond {
+  background: deepskyblue;
+}
+
+.mutations button.candy {
+  background: hotpink;
+}
+
+.mutations button.rainbow {
+  background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+}
+
+.mutations button.selected {
+  outline: 3px solid #ffde59;
+}
+
+.traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.trait-card {
+  width: 80px;
+  height: 80px;
+  background: #555;
+  border-radius: 10px;
+  text-align: center;
+  padding: 5px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.trait-card.selected {
+  outline: 3px solid #ffde59;
+}
+
+.trait-card:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px #ffde59;
+}
+
+.trait-icon {
+  font-size: 30px;
+  margin-bottom: 5px;
+}
+
+.result {
+  background: #333;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 1.5em;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.details {
+  margin-top: 10px;
+  background: #444;
+  padding: 15px;
+  border-radius: 5px;
+  font-family: monospace;
+  color: #ccc;
+  white-space: pre-wrap;
+}
+
+.mutations {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mutations button.selected {
+  box-shadow: 0 0 0 3px #ffde59, 0 0 10px #ffde59;
+}
+
+#calculate-btn {
+  display: block;
+  margin: 30px auto;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #222;
+  background: #ffde59;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+#calculate-btn:hover {
+  background: #ffe26a;
+  transform: scale(1.05);
+}
+
+.result {
+  background: #333;
+  padding: 25px;
+  border-radius: 10px;
+  font-size: 2em;
+  text-align: center;
+  margin-top: 20px;
+  color: #ffde59;
+}
+
+.result .small {
+  display: block;
+  font-size: 0.6em;
+  color: #aaa;
+  margin-top: 10px;
+}
+
