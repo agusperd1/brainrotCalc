@@ -428,3 +428,10 @@ h1, h2 {
   max-height: 40px;
   overflow: visible;
 }
+
+.trading-card .brainrot-cash {
+  font-size: 0.6em;
+  font-weight: bold;
+  color: #ffde59;
+  margin-top: 4px;
+}

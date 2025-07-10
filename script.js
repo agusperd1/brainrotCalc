@@ -251,6 +251,18 @@ function renderTradingList() {
     if (mutation === mutations.candy) card.classList.add("candy");
     if (mutation === mutations.rainbow) card.classList.add("rainbow");
 
+    const base = brainrot.base_cash_per_sec;
+    const mutationBonus = item.mutation - 1;
+
+    let traitsBonus = 0;
+    for (let t of item.traits) {
+      traitsBonus += (traits[t].multiplier - 1);
+    }
+
+    const totalMultiplier = 1 + mutationBonus + traitsBonus;
+    const totalCashPerSec = base * totalMultiplier;
+    const formattedCashPerSec = formatNumberShort(totalCashPerSec) + "/s";
+
     const innerContent = `
       <div class="controls">
         <button class="plus-btn">+</button>
@@ -258,14 +270,15 @@ function renderTradingList() {
       </div>
       <img src="${brainrot.img}" alt="${brainrot.name}">
       <div class="brainrot-name">${brainrot.name}</div>
+      <div class="brainrot-cash">${formattedCashPerSec}</div>
       <div class="traits">
         ${item.traits.map(t => `
           <img src="${traits[t].icon}" alt="${t}" class="trait-icon-img">
         `).join('')}
       </div>
-
       <div class="quantity">x${item.amount}</div>
     `;
+
 
     card.innerHTML = `<div class="inner">${innerContent}</div>`;
 
