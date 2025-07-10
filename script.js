@@ -24,12 +24,13 @@ const mutations = {
 };
 
 const traits = {
-  nyan_cat: { multiplier: 6.0, icon: "🐱" },
-  meteor: { multiplier: 4.0, icon: "☄️" },
-  fireworks: { multiplier: 6.0, icon: "🎆" },
-  taco: { multiplier: 3.0, icon: "🌮" },
-  zombie: { multiplier: 4.0, icon: "🪵" }
+  nyan_cat: { multiplier: 6.0, icon: "img/icon/nyan.png" },
+  meteor: { multiplier: 4.0, icon: "img/icon/meteor.png" },
+  fireworks: { multiplier: 6.0, icon: "img/icon/firework.png" },
+  taco: { multiplier: 3.0, icon: "img/icon/taco.png" },
+  zombie: { multiplier: 4.0, icon: "img/icon/zombi.png" }
 };
+
 
 let currentMode = 'calculator';
 let tradingList = [];
@@ -140,9 +141,10 @@ for (let [key, data] of Object.entries(traits)) {
   const div = document.createElement("div");
   div.className = "trait-card";
   div.innerHTML = `
-    <div class="trait-icon">${data.icon}</div>
+    <img src="${data.icon}" alt="${key}" class="trait-icon-img">
     <small>${key.replace("_", " ")}</small>
   `;
+
   div.onclick = () => {
     div.classList.toggle("selected");
     if (div.classList.contains("selected")) {
@@ -256,7 +258,12 @@ function renderTradingList() {
       </div>
       <img src="${brainrot.img}" alt="${brainrot.name}">
       <div class="brainrot-name">${brainrot.name}</div>
-      <div class="traits">${item.traits.map(t => traits[t].icon).join(' ')}</div>
+      <div class="traits">
+        ${item.traits.map(t => `
+          <img src="${traits[t].icon}" alt="${t}" class="trait-icon-img">
+        `).join('')}
+      </div>
+
       <div class="quantity">x${item.amount}</div>
     `;
 
@@ -288,11 +295,8 @@ function renderTradingList() {
 
 function exportTradingList() {
   const list = document.getElementById("trading-list");
-
-  // clone
   const clone = list.cloneNode(true);
 
-  // hide controls
   clone.querySelectorAll(".controls").forEach(ctrl => {
     ctrl.style.display = "none";
   });

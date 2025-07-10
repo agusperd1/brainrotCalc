@@ -55,12 +55,17 @@ h1, h2 {
   border-radius: 5px;
   cursor: pointer;
   color: #fff;
+  text-shadow:
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
 }
+
 
 
 .mutations button.gold {
   background: gold;
-  color: #000;
 }
 
 .mutations button.diamond {
@@ -80,12 +85,23 @@ h1, h2 {
 }
 
 
-.traits {
+#traits {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   justify-content: center;
-  margin-bottom: 30px;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+
+.trading-card .traits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  margin-top: 6px;
 }
 
 .trait-card {
@@ -97,6 +113,10 @@ h1, h2 {
   padding: 5px;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 
@@ -263,18 +283,6 @@ h1, h2 {
   line-height: 1.2;
 }
 
-.trading-card .traits {
-  min-height: 18px;
-  font-size: 1em;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2px;
-  align-items: center;
-  margin-top: 4px;
-}
-
-
-
 .trading-card .quantity {
   position: absolute;
   bottom: 5px;
@@ -320,6 +328,7 @@ h1, h2 {
   background: rgba(0,0,0);
   border-radius: 6px;
   padding: 5px;
+  overflow: visible;
 }
 
 .trading-card.candy {
@@ -395,3 +404,25 @@ h1, h2 {
   }
 }
 
+.trait-icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 2px;
+}
+
+.trading-card .traits img.trait-icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  margin: 2px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.trading-card .traits {
+  max-height: 40px;
+  overflow: visible;
+}
