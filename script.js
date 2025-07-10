@@ -78,7 +78,7 @@ function switchMode(mode) {
 
   document.getElementById("calculator-mode-btn").classList.toggle("active", mode === 'calculator');
   document.getElementById("trading-mode-btn").classList.toggle("active", mode === 'trading');
-
+  document.getElementById("export-container").style.display = mode === 'trading' ? 'block' : 'none';
   document.getElementById("calculate-btn").style.display = mode === 'calculator' ? 'block' : 'none';
   document.getElementById("trading-add-btn").style.display = mode === 'trading' ? 'block' : 'none';
   document.getElementById("trading-list").style.display = mode === 'trading' ? 'grid' : 'none';
@@ -229,7 +229,6 @@ function addToTradingList(brainrotName, mutation, traits) {
       amount: 1
     });
   }
-  saveTradingList();
   renderTradingList();
   showToast(`✅ Added ${brainrotName} to list`);
 }
@@ -269,7 +268,6 @@ function renderTradingList() {
     plusBtn.addEventListener("click", e => {
       e.stopPropagation();
       item.amount += 1;
-      saveTradingList();
       renderTradingList();
     });
 
@@ -280,11 +278,58 @@ function renderTradingList() {
       } else {
         tradingList.splice(tradingList.indexOf(item), 1);
       }
-      saveTradingList();
       renderTradingList();
     });
 
     listDiv.appendChild(card);
   });
+  saveTradingList()
 }
 
+function exportTradingList() {
+  const list = document.getElementById("trading-list");
+
+  // clone
+  const clone = list.cloneNode(true);
+
+  // hide controls
+  clone.querySelectorAll(".controls").forEach(ctrl => {
+    ctrl.style.display = "none";
+  });
+
+  clone.style.width = list.offsetWidth + "px";
+  clone.style.height = list.scrollHeight + "px";
+  clone.style.background = "#333";
+  clone.style.padding = "10px";
+
+  const tempContainer = document.createElement("div");
+  tempContainer.style.position = "fixed";
+  tempContainer.style.top = "-10000px";
+  tempContainer.appendChild(clone);
+  document.body.appendChild(tempContainer);
+
+  htmlToImage.toPng(clone, { backgroundColor: "#333" })
+    .then((dataUrl) => {
+      const link = document.createElement('a');
+      link.download = 'trading-list.png';
+      link.href = dataUrl;
+      link.click();
+      document.body.removeChild(tempContainer);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+document.getElementById("export-btn").addEventListener("click", () => {
+  exportTradingList();
+});
+
+document.getElementById("clear-btn").onclick = () => {
+  if (confirm("Are you sure you want to clear your trading list?")) {
+    tradingList = [];
+    localStorage.removeItem('brainrot_trading_list');
+    renderTradingList();
+    showToast("🗑️ Trading list cleared!");
+  }
+};
