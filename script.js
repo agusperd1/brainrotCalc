@@ -37,6 +37,25 @@ let selectedBrainrot = null;
 let selectedMutation = 1;
 let selectedTraits = new Set();
 
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = localStorage.getItem("brainrotTradingList");
+  if (saved) {
+    tradingList = JSON.parse(saved);
+    renderTradingList();
+  }
+
+  const savedMode = localStorage.getItem("brainrotMode");
+  if (savedMode) {
+    switchMode(savedMode);
+  } else {
+    switchMode("calculator");
+  }
+});
+
+function saveCurrentMode() {
+  localStorage.setItem("brainrotMode", currentMode);
+}
+
 
 function formatNumberShort(n) {
   if (n >= 1e12) return (n / 1e12).toFixed(2) + 'T';
@@ -65,6 +84,15 @@ function switchMode(mode) {
   document.getElementById("trading-list").style.display = mode === 'trading' ? 'grid' : 'none';
   document.getElementById("result").style.display = mode === 'calculator' ? 'block' : 'none';
   document.getElementById("details").style.display = mode === 'calculator' ? 'block' : 'none';
+
+  const pageTitle = document.getElementById("page-title");
+  if (pageTitle) {
+    pageTitle.textContent =
+      mode === 'calculator'
+        ? "Brainrot Cash/s Calculator"
+        : "Brainrot Trading List";
+  }
+  saveCurrentMode();
 }
 
 const brainrotGrid = document.getElementById("brainrot-grid");
@@ -94,10 +122,9 @@ for (let [key, val] of Object.entries(mutations)) {
   btn.className = key;
   btn.innerText = `${key.toUpperCase()} (x${val})`;
   btn.onclick = () => {
-    // check if already selected
     if (btn.classList.contains("selected")) {
       btn.classList.remove("selected");
-      selectedMutation = 1; // no mutation
+      selectedMutation = 1;
     } else {
       document.querySelectorAll(".mutations button").forEach(b => b.classList.remove("selected"));
       btn.classList.add("selected");
@@ -180,6 +207,10 @@ function showToast(message) {
   }, 2000);
 }
 
+function saveTradingList() {
+  localStorage.setItem("brainrotTradingList", JSON.stringify(tradingList));
+}
+
 
 function addToTradingList(brainrotName, mutation, traits) {
   const existing = tradingList.find(item =>
@@ -198,7 +229,7 @@ function addToTradingList(brainrotName, mutation, traits) {
       amount: 1
     });
   }
-
+  saveTradingList();
   renderTradingList();
   showToast(`✅ Added ${brainrotName} to list`);
 }
@@ -232,13 +263,13 @@ function renderTradingList() {
 
     card.innerHTML = `<div class="inner">${innerContent}</div>`;
 
-    // Add events
     const plusBtn = card.querySelector(".plus-btn");
     const minusBtn = card.querySelector(".minus-btn");
 
     plusBtn.addEventListener("click", e => {
       e.stopPropagation();
       item.amount += 1;
+      saveTradingList();
       renderTradingList();
     });
 
@@ -249,6 +280,7 @@ function renderTradingList() {
       } else {
         tradingList.splice(tradingList.indexOf(item), 1);
       }
+      saveTradingList();
       renderTradingList();
     });
 

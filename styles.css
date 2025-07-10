@@ -372,7 +372,7 @@ h1, h2 {
   pointer-events: auto;
 }
 .trading-card .controls .plus-btn {
-  background: #28a745; /* Bootstrap green */
+  background: #28a745;
 }
 
 .trading-card .controls .plus-btn:hover {
@@ -380,7 +380,7 @@ h1, h2 {
 }
 
 .trading-card .controls .minus-btn {
-  background: #dc3545; /* Bootstrap red */
+  background: #dc3545;
 }
 
 .trading-card .controls .minus-btn:hover {
