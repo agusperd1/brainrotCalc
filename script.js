@@ -31,6 +31,8 @@ const traits = {
   zombie: { multiplier: 4.0, icon: "🪵" }
 };
 
+let currentMode = 'calculator';
+let tradingList = [];
 let selectedBrainrot = null;
 let selectedMutation = 1;
 let selectedTraits = new Set();
@@ -42,6 +44,27 @@ function formatNumberShort(n) {
   if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
   if (n >= 1e3) return (n / 1e3).toFixed(2) + 'K';
   return n.toString();
+}
+
+document.getElementById("calculator-mode-btn").onclick = () => {
+  switchMode('calculator');
+};
+
+document.getElementById("trading-mode-btn").onclick = () => {
+  switchMode('trading');
+};
+
+function switchMode(mode) {
+  currentMode = mode;
+
+  document.getElementById("calculator-mode-btn").classList.toggle("active", mode === 'calculator');
+  document.getElementById("trading-mode-btn").classList.toggle("active", mode === 'trading');
+
+  document.getElementById("calculate-btn").style.display = mode === 'calculator' ? 'block' : 'none';
+  document.getElementById("trading-add-btn").style.display = mode === 'trading' ? 'block' : 'none';
+  document.getElementById("trading-list").style.display = mode === 'trading' ? 'grid' : 'none';
+  document.getElementById("result").style.display = mode === 'calculator' ? 'block' : 'none';
+  document.getElementById("details").style.display = mode === 'calculator' ? 'block' : 'none';
 }
 
 const brainrotGrid = document.getElementById("brainrot-grid");
@@ -71,12 +94,19 @@ for (let [key, val] of Object.entries(mutations)) {
   btn.className = key;
   btn.innerText = `${key.toUpperCase()} (x${val})`;
   btn.onclick = () => {
-    document.querySelectorAll(".mutations button").forEach(b => b.classList.remove("selected"));
-    btn.classList.add("selected");
-    selectedMutation = val;
+    // check if already selected
+    if (btn.classList.contains("selected")) {
+      btn.classList.remove("selected");
+      selectedMutation = 1; // no mutation
+    } else {
+      document.querySelectorAll(".mutations button").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      selectedMutation = val;
+    }
   };
   mutationDiv.appendChild(btn);
 }
+
 
 const traitsDiv = document.getElementById("traits");
 for (let [key, data] of Object.entries(traits)) {
@@ -126,3 +156,103 @@ document.getElementById("calculate-btn").onclick = () => {
   details += `Total Cash/s: ${total.toLocaleString()}`;
   document.getElementById("details").innerText = details;
 };
+
+
+document.getElementById("trading-add-btn").onclick = () => {
+  if (!selectedBrainrot) {
+    alert("Please select a Brainrot!");
+    return;
+  }
+
+  const brainrotName = selectedBrainrot.name;
+  const mutation = selectedMutation;
+  const selectedTraitsArray = Array.from(selectedTraits);
+
+  addToTradingList(brainrotName, mutation, selectedTraitsArray);
+};
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
+}
+
+
+function addToTradingList(brainrotName, mutation, traits) {
+  const existing = tradingList.find(item =>
+    item.brainrot === brainrotName &&
+    item.mutation === mutation &&
+    JSON.stringify(item.traits.sort()) === JSON.stringify(traits.sort())
+  );
+
+  if (existing) {
+    existing.amount += 1;
+  } else {
+    tradingList.push({
+      brainrot: brainrotName,
+      mutation,
+      traits,
+      amount: 1
+    });
+  }
+
+  renderTradingList();
+  showToast(`✅ Added ${brainrotName} to list`);
+}
+
+function renderTradingList() {
+  const listDiv = document.getElementById("trading-list");
+  listDiv.innerHTML = "";
+
+  tradingList.forEach(item => {
+    const brainrot = brainrots.find(b => b.name === item.brainrot);
+    const mutation = item.mutation;
+
+    const card = document.createElement("div");
+    card.className = "trading-card";
+
+    if (mutation === mutations.gold) card.classList.add("gold");
+    if (mutation === mutations.diamond) card.classList.add("diamond");
+    if (mutation === mutations.candy) card.classList.add("candy");
+    if (mutation === mutations.rainbow) card.classList.add("rainbow");
+
+    const innerContent = `
+      <div class="controls">
+        <button class="plus-btn">+</button>
+        <button class="minus-btn">−</button>
+      </div>
+      <img src="${brainrot.img}" alt="${brainrot.name}">
+      <div class="brainrot-name">${brainrot.name}</div>
+      <div class="traits">${item.traits.map(t => traits[t].icon).join(' ')}</div>
+      <div class="quantity">x${item.amount}</div>
+    `;
+
+    card.innerHTML = `<div class="inner">${innerContent}</div>`;
+
+    // Add events
+    const plusBtn = card.querySelector(".plus-btn");
+    const minusBtn = card.querySelector(".minus-btn");
+
+    plusBtn.addEventListener("click", e => {
+      e.stopPropagation();
+      item.amount += 1;
+      renderTradingList();
+    });
+
+    minusBtn.addEventListener("click", e => {
+      e.stopPropagation();
+      if (item.amount > 1) {
+        item.amount -= 1;
+      } else {
+        tradingList.splice(tradingList.indexOf(item), 1);
+      }
+      renderTradingList();
+    });
+
+    listDiv.appendChild(card);
+  });
+}
+

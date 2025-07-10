@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="mode-switcher">
+    <button id="calculator-mode-btn" class="mode-btn active">Calculator</button>
+    <button id="trading-mode-btn" class="mode-btn">Trading List</button>
+  </div>
   <div class="container">
     <h1>Brainrot Cash/s Calculator</h1>
 
@@ -19,12 +23,16 @@
     <h2>Select Traits</h2>
     <div id="traits" class="traits"></div>
 
-    <button id="calculate-btn">Calculate Cash/s</button>
+    <button id="calculate-btn" class="main-btn">Calculate Cash/s</button>
+    <button id="trading-add-btn" class="main-btn" style="display:none;">Add to Trading List</button>
 
     <div class="result" id="result"></div>
     <div class="details" id="details"></div>
   </div>
+  
+  <div id="trading-list" class="trading-list" style="display:none;"></div>
 
+  <div id="toast" class="toast"></div>
   <footer class="footer">
   Made by @agus_pdm15
   </footer>
