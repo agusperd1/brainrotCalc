@@ -361,6 +361,11 @@ document.getElementById("export-btn").addEventListener("click", () => {
   exportTradingList();
 });
 
+document.getElementById("export-text-btn").addEventListener("click", () => {
+  exportTradingListAsText();
+});
+
+
 document.getElementById("clear-btn").onclick = () => {
   if (confirm("Are you sure you want to clear your trading list?")) {
     tradingList = [];
@@ -369,3 +374,56 @@ document.getElementById("clear-btn").onclick = () => {
     showToast("🗑️ Trading list cleared!");
   }
 };
+
+function exportTradingListAsText() {
+  if (tradingList.length === 0) {
+    showToast("⚠️ Trading list is empty.");
+    return;
+  }
+
+  // Group trading list by brainrot name
+  const grouped = {};
+
+  tradingList.forEach(item => {
+    if (!grouped[item.brainrot]) {
+      grouped[item.brainrot] = [];
+    }
+    grouped[item.brainrot].push(item);
+  });
+
+  let output = "";
+
+  for (const [brainrotName, entries] of Object.entries(grouped)) {
+    output += `${brainrotName}:\n`;
+
+    entries.forEach(item => {
+      const mutationName = (item.mutation !== 1)
+        ? Object.keys(mutations).find(k => mutations[k] === item.mutation)
+        : "common";
+
+      let line = `   [${mutationName}]`;
+
+      if (item.traits.length) {
+        line += ` {${item.traits.join(",")}}`;
+      }
+
+      if (item.amount > 0) {
+        line += ` x${item.amount}`;
+      }
+
+      output += line + "\n";
+    });
+  }
+
+  navigator.clipboard.writeText(output.trim())
+    .then(() => {
+      showToast("✅ Trading list copied to clipboard!");
+    })
+    .catch(err => {
+      console.error(err);
+      showToast("⚠️ Failed to copy trading list.");
+    });
+}
+
+
+
