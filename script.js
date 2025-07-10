@@ -295,24 +295,54 @@ function renderTradingList() {
 
 function exportTradingList() {
   const list = document.getElementById("trading-list");
-  const clone = list.cloneNode(true);
 
+  const wrapper = document.createElement("div");
+  wrapper.style.display = "flex";
+  wrapper.style.flexDirection = "column";
+  wrapper.style.alignItems = "center";
+  wrapper.style.background = "#333";
+  wrapper.style.padding = "20px";
+  wrapper.style.boxSizing = "border-box";
+  wrapper.style.width = list.offsetWidth + "px";
+
+  const header = document.createElement("h2");
+  header.textContent = "TRADE LIST";
+  header.style.color = "#ffde59";
+  header.style.textAlign = "center";
+  header.style.marginBottom = "20px";
+  header.style.fontFamily = "'Segoe UI', sans-serif";
+  header.style.fontWeight = "bold";
+  header.style.fontSize = "28px";
+  header.style.letterSpacing = "2px";
+  header.style.textShadow = "2px 2px #000";
+  header.style.borderBottom = "3px solid #ffde59";
+  header.style.paddingBottom = "10px";
+  header.style.width = "100%";
+
+  wrapper.appendChild(header);
+
+  const clone = list.cloneNode(true);
   clone.querySelectorAll(".controls").forEach(ctrl => {
     ctrl.style.display = "none";
   });
 
-  clone.style.width = list.offsetWidth + "px";
-  clone.style.height = list.scrollHeight + "px";
-  clone.style.background = "#333";
-  clone.style.padding = "10px";
+  // Force grid styles to match original
+  clone.style.width = "100%";
+  clone.style.display = "grid";
+  clone.style.gridTemplateColumns = window.getComputedStyle(list).gridTemplateColumns;
+  clone.style.gap = window.getComputedStyle(list).gap;
+
+  wrapper.appendChild(clone);
 
   const tempContainer = document.createElement("div");
   tempContainer.style.position = "fixed";
   tempContainer.style.top = "-10000px";
-  tempContainer.appendChild(clone);
+  tempContainer.style.left = "0";
+  tempContainer.style.width = "100%";
+  tempContainer.appendChild(wrapper);
   document.body.appendChild(tempContainer);
 
-  htmlToImage.toPng(clone, { backgroundColor: "#333" })
+  htmlToImage.toPng(wrapper, { backgroundColor: "#333" })
     .then((dataUrl) => {
       const link = document.createElement('a');
       link.download = 'trading-list.png';
@@ -324,6 +354,8 @@ function exportTradingList() {
       console.error(err);
     });
 }
+
+
 
 document.getElementById("export-btn").addEventListener("click", () => {
   exportTradingList();
