@@ -1,6 +1,7 @@
 const brainrots = [
   { name: "Unclito Samito", base_cash_per_sec: 65000, img: "img/unclito.png" },
   { name: "Tralalero Tralala", base_cash_per_sec: 50000, img: "img/tralalero.png" },
+  { name: "Cavallo Virtuoso", base_cash_per_sec: 7500, img: "img/cavallo.png" },
   { name: "Odin din din dun", base_cash_per_sec: 75000, img: "img/odin.jpg" },
   { name: "Gattatino Nyanino", base_cash_per_sec: 25000, img: "img/nyan.png" },
   { name: "Girafa Celestre", base_cash_per_sec: 20000, img: "img/girafa.png" },
